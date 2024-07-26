@@ -32,7 +32,6 @@ export function Person({ person }) {
             {person.firstName} {person.lastName}
           </div>
         </div>
-        {/* TODO: Format date removing seconds* */}
         <div>
           <div className="tracking-tighter text-gray-500 dark:text-gray-400">
             Check-in
