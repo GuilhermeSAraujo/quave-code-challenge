@@ -1,23 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { EventSelector } from './EventSelector';
+import { EventSummary } from './EventSummary';
 import { PeopleList } from './PeopleList';
+import { SelectEventProvider } from './hooks/useSelectEventHook';
 
-export const App = () => {
-  const [selectedEvent, setSelectedEvent] = useState(null);
-
-  function handleEventChange(event) {
-    setSelectedEvent(event.target.value);
-  }
-
-  return (
+export const App = () => (
+  <SelectEventProvider>
     <div className="container mx-auto px-8 py-4">
       <h1 className="text-lg font-bold">Event Check-in</h1>
-      <EventSelector
-        // maybe create a context
-        selectedEvent={selectedEvent}
-        handleEventChange={handleEventChange}
-      />
-      <PeopleList selectedEvent={selectedEvent} />
+      <EventSelector />
+      <EventSummary />
+      <PeopleList />
     </div>
-  );
-};
+  </SelectEventProvider>
+);
