@@ -1,9 +1,12 @@
 import { Meteor } from 'meteor/meteor';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 export function Person({ person }) {
+  const [justCheckedIn, setJustCheckedIn] = useState(false);
+
   const handleStateChange = useCallback(async () => {
     if (!person.checkInDate) {
+      setJustCheckedIn(true);
       await Meteor.callAsync('people.checkIn', person._id);
       return;
     }
@@ -17,6 +20,19 @@ export function Person({ person }) {
     () => Boolean(person.checkInDate) && Boolean(person.checkOutDate),
     [person.checkInDate, person.checkOutDate]
   );
+
+  useEffect(() => {
+    let timer;
+    if (justCheckedIn) {
+      timer = setTimeout(() => {
+        setJustCheckedIn(false);
+      }, 5000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [justCheckedIn]);
 
   return (
     <div
@@ -77,6 +93,7 @@ export function Person({ person }) {
           <button
             className="ml-auto w-full rounded-lg bg-blue-500 px-2 py-1 text-xs font-bold text-white hover:bg-blue-800 md:w-48"
             onClick={handleStateChange}
+            disabled={justCheckedIn}
           >
             {!person.checkInDate ? 'Check-in' : 'Check-out'}{' '}
             {`${person.firstName} ${person.lastName}`}
